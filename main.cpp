@@ -155,7 +155,7 @@ void mostrarEntrenadorPokemon1(const EntrenadorPokemon& entrenador1, const Pokem
          << ", HP: " << pokemon1.hp 
          << ", Ataque 1: " << pokemon1.ataques[0] 
          << ", Ataque 2: " << pokemon1.ataques[1] 
-         << ", Curación: " << pokemon1.curacion 
+         << ", Curacion: " << pokemon1.curacion 
          << ", Tipo: " << tipoToString(pokemon1.tipo1) << endl;
     
     cout << "Cuantos caramelos tienes: " << entrenador1.caramelo << endl;
@@ -168,7 +168,7 @@ void mostrarEntrenadorPokemon2(const EntrenadorPokemon& entrenador2, const Pokem
          << ", HP: " << pokemon2.hp 
          << ", Ataque 1: " << pokemon2.ataques[0] 
          << ", Ataque 2: " << pokemon2.ataques[1] 
-         << ", Curación: " << pokemon2.curacion 
+         << ", Curacion: " << pokemon2.curacion 
          << ", Tipo: " << tipoToString(pokemon2.tipo1) << endl;
     
     cout << "Cuantos caramelos tienes: " << entrenador2.caramelo << endl;
@@ -186,45 +186,71 @@ double elementalModifier(Tipos attackType, Tipos defenderType) { // Con esta fun
         (attackType == Tipos::Fuego && defenderType == Tipos::Agua) ||
         (attackType == Tipos::Planta && defenderType == Tipos::Fuego)
         )
-        return 0.8; // Desventaja elemental
+        return 0.9; // Desventaja elemental
 
+    else
     return 1.0; // Daño neutral
 }
 
 // En este void tendremos la pelea pokemon
 void battle(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenador2, PokemonData& pokemon1, PokemonData& pokemon2) {
 
-    cout << "\n===== ¡COMIENZA LA BATALLA! =====" << endl;
+    cout << "\n===== COMIENZA LA BATALLA! =====" << endl;
 
     cout << entrenador1.nombre << " (Jugador 1) VS " << entrenador2.nombre << " (Jugador 2)" << endl;
 
     while (pokemon1.hp > 0 && pokemon2.hp > 0) {
         // Esto mostrara las opciones que tiene el entrenador para usar
         cout << entrenador1.nombre << " ataca con " << pokemon1.nombre << " (HP: " << pokemon1.hp << ")" << endl;
-        cout << "1. Ataque 1 (" << pokemon1.ataques[0] << " daño)\n";
-        cout << "2. Ataque 2 (" << pokemon1.ataques[1] << " daño)\n";
+        cout << "1. Ataque 1 (" << pokemon1.ataques[0] << " danio)\n";
+        cout << "2. Ataque 2 (" << pokemon1.ataques[1] << " danio)\n";
         cout << "3. Curacion (" << pokemon1.curacion << " de curacion)\n";
+        cout << "4. Usar caramelo (Cantidad de caramelos: " << entrenador1.caramelo << ")\n";
+
 
         // Y creamos la opcion que elegira el entrenador
         int attackChoice;
         cin >> attackChoice;
-        if (attackChoice == 1 || attackChoice == 2)
+
+        int attack1 = 0, attack2 = 0, curacion1 = 0, attack3 = 0, attack4 = 0, curacion2 = 0;
+
+        switch (attackChoice)
         {
-            int damage1 = pokemon1.ataques[attackChoice - 1] * elementalModifier(pokemon1.tipo1, pokemon2.tipo1); // Aqui se guardan dos cosas, primero el daño que hara el pokemon con el ataque que haya elegido, despues llamamos la funcion de modificador elemental para poder verificar si hay ventaja u desventaja en el ataque que hara el pokemon
-            pokemon2.hp -= damage1; // Y se resta ese daño
-        } else {
-            int curacion1 = pokemon1.curacion; // creamos un entero para que le añada vida al pokemon cuando se use
+        case 1:
+            attack1 = pokemon1.ataques[attackChoice - 1] * elementalModifier(pokemon1.tipo1, pokemon2.tipo1); // Aqui se guardan dos cosas, primero el daño que hara el pokemon con el ataque que haya elegido, despues llamamos la funcion de modificador elemental para poder verificar si hay ventaja u desventaja en el ataque que hara el pokemon
+            pokemon2.hp -= attack1;
+            break;
+        case 2:
+            attack2 = pokemon1.ataques[attackChoice - 1];
+            pokemon2.hp -= attack2;
+            break;
+        case 3:
+            curacion1 = pokemon1.curacion; // creamos un entero para que le añada vida al pokemon cuando se use
             pokemon1.hp += curacion1;
             if (pokemon1.hp > 100)
             {
                 pokemon1.hp = 100;
             }
+            break;
+        case 4:
+            if (entrenador1.caramelo > 0) {
+                entrenador1.caramelo--;
+                pokemon1.ataques[0] += 10;  // Aumenta el ataque 1
+                cout << "Usaste un caramelo! Aumentaste el poder de ataque.\n";
+            } else {
+                cout << "No tienes caramelos disponibles.\n";
+            }
+            break;
             
+        default:
+            cout << "No es una opcion valida \n";
+            break;
         }
+        
         
 
         if (pokemon2.hp <= 0) {
-            cout << pokemon2.nombre << " ha sido derrotado. ¡" << entrenador1.nombre << " gana!" << endl;
+            cout << pokemon2.nombre << " ha sido derrotado. " << entrenador1.nombre << " gana!" << endl;
             break;
         }
 
@@ -232,27 +258,45 @@ void battle(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenador2, Poke
         // Turno del jugador 2, lo mismo ocurre que con el entrenador 1
 
         cout << entrenador2.nombre << " ataca con " << pokemon2.nombre << " (HP: " << pokemon2.hp << ")" << endl;
-        cout << "1. Ataque 1 (" << pokemon2.ataques[0] << " daño)\n";
-        cout << "2. Ataque 2 (" << pokemon2.ataques[1] << " daño)\n";
-        cout << "3. Curacion (" << pokemon2.curacion << " daño)\n"; 
+        cout << "1. Ataque 1 (" << pokemon2.ataques[0] << " danio)\n";
+        cout << "2. Ataque 2 (" << pokemon2.ataques[1] << " danioo)\n";
+        cout << "3. Curacion (" << pokemon2.curacion << " danio)\n"; 
+        cout << "4. Usar caramelo (Cantidad de caramelos: " << entrenador1.caramelo << ")\n";
 
         cin >> attackChoice;
-
-        if(attackChoice == 1 || attackChoice == 2){
-        int damage2 = pokemon2.ataques[attackChoice - 1] * elementalModifier(pokemon2.tipo1, pokemon1.tipo1);
-        pokemon1.hp -= damage2;
-        } else {
-            int curacion2 = pokemon2.curacion;
+        switch (attackChoice)
+        {
+        case 1:
+            attack3 = pokemon2.ataques[attackChoice - 1] * elementalModifier(pokemon2.tipo1, pokemon1.tipo1); // Aqui se guardan dos cosas, primero el daño que hara el pokemon con el ataque que haya elegido, despues llamamos la funcion de modificador elemental para poder verificar si hay ventaja u desventaja en el ataque que hara el pokemon
+            pokemon1.hp -= attack3;
+            break;
+        case 2:
+            attack4 = pokemon2.ataques[attackChoice - 1];
+            pokemon1.hp -= attack4;
+            break;
+        case 3:
+            curacion2 = pokemon2.curacion; // creamos un entero para que le añada vida al pokemon cuando se use
             pokemon2.hp += curacion2;
             if (pokemon2.hp > 100)
             {
                 pokemon2.hp = 100;
             }
-            
+            break;
+        case 4:
+            if (entrenador2.caramelo > 0) {
+                entrenador2.caramelo--;
+                pokemon2.ataques[0] += 10;  // Aumenta el ataque 1
+                cout << "Usaste un caramelo! Aumentaste el poder de ataque.\n";
+            } else {
+                cout << "No tienes caramelos disponibles.\n";
+            }
+            break;
+        default:
+            cout << "No es una opcion valida";
+            break;
         }
-
         if (pokemon1.hp <= 0) {
-            cout << pokemon1.nombre << " ha sido derrotado. ¡" << entrenador2.nombre << " gana!" << endl;
+            cout << pokemon1.nombre << " ha sido derrotado. " << entrenador2.nombre << " gana!" << endl;
             break;
         }
 
@@ -260,6 +304,20 @@ void battle(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenador2, Poke
 
 }
 
+void logopokemon(){
+    cout << "                                  ,'\\                               \n";
+    cout << "    _.----.        ____         ,'  _\\  ___    ___     ____       \n";
+    cout << "_,-'       `.     |    |  /`.   \\,-'   |   \\  /   |   |    \\  |`. \n";
+    cout << "\\      __    \\    '-.  | /   `.  ___   |    \\/    |   '-.   \\ |  |\n";
+    cout << " \\.    \\ \\   |  __  |  |/    ,','_  `. |          | __  |    \\|  |\n";
+    cout << "  \\     \\/   /,' _`.|      ,' / / / /  |          ,' _`.|     |  |\n";
+    cout << "   \\     ,-'/  /   \\    ,'   | \\/ / ,`.|         /  /   \\  |     |\n";
+    cout << "    \\    \\ |   \\_/  |   `-.  \\    `'  /|  |    ||   \\_/  | |\\    |\n";
+    cout << "     \\    \\ \\      /       `-.`.___,-' |  |\\  /| \\      /  | |   |\n";
+    cout << "      \\    \\ `.__,'|  |`-._    `|      |__| \\/ |  `.__,'|  | |   |\n";
+    cout << "       \\_.-'       |__|    `-._ |              '-.|     '-.| |   |\n";
+    cout << "                                `'                           '-._|\n";
+}
 void IniciodeSesion(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenador2, PokemonData& pokemon1, PokemonData& pokemon2){
     char opcion_InicioSesion1;
     char opcion_InicioSesion2;
@@ -290,6 +348,7 @@ void IniciodeSesion(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenado
             pokemon1 = (eleccion1 == 1 ? charmander : eleccion1 == 2 ? bulbasaur : squirtle);
 
             guardarEntrenadorPokemon1(entrenador1, pokemon1);
+            cout << "Guardando datos del entrenador 1: " << entrenador1.nombre << ", " << pokemon1.nombre << endl;
         }
         
     } else
@@ -310,11 +369,12 @@ void IniciodeSesion(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenado
         pokemon1 = (eleccion1 == 1 ? charmander : eleccion1 == 2 ? bulbasaur : squirtle);
 
         guardarEntrenadorPokemon1(entrenador1, pokemon1);
+        cout << "Guardando datos del entrenador 1: " << entrenador1.nombre << ", " << pokemon1.nombre << endl;
     }
     
 
     cout << "Segundo jugador, BIENVENIDO A LA ARENA POKEMON! \n";
-    cout << "Eres nuevo o ya eres un entrenador pokemon? (s/n) \n";
+    cout << "Eres nuevo o ya eres un entrenador pokemon? (Si, ya soy entrenador (pon s)/No soy entrenador(pon n)) \n";
     cin >> opcion_InicioSesion2;
     if (opcion_InicioSesion2 == 's' || opcion_InicioSesion2 == 'S')
     {
@@ -339,6 +399,7 @@ void IniciodeSesion(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenado
             pokemon2 = (eleccion2 == 1 ? charmander : eleccion2 == 2 ? bulbasaur : squirtle);
 
             guardarEntrenadorPokemon2(entrenador2, pokemon2);
+            cout << "Guardando datos del entrenador 2: " << entrenador2.nombre << ", " << pokemon2.nombre << endl;
         }
         
     } else 
@@ -360,7 +421,60 @@ void IniciodeSesion(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenado
         pokemon2 = (eleccion2 == 1 ? charmander : eleccion2 == 2 ? bulbasaur : squirtle);
 
         guardarEntrenadorPokemon2(entrenador2, pokemon2);
+        cout << "Guardando datos del entrenador 2: " << entrenador2.nombre << ", " << pokemon2.nombre << endl;
     }
+}
+
+void Pokedex(){
+    PokemonData charmander = {"Charmander", 100, {30, 20}, 10, Tipos::Fuego};
+    PokemonData bulbasaur = {"Bulbasaur", 100, {25, 15}, 12, Tipos::Planta};
+    PokemonData squirtle = {"Squirtle", 100, {28, 18}, 11, Tipos::Agua};
+
+    int opcionPokedex;
+    int salir = 0;
+
+    cout << "En el pokedex puedes ver la informacion de los pokemones que participan en la arena pokemon \n";
+    while (opcionPokedex != 4)
+    {
+        cout << "De que pokemon quieres ver los datos? \n";
+        cout << "1. Charmander \n";
+        cout << "2. Bulbasaur \n";
+        cout << "3. Squirtle \n";
+        cout << "4. Salir de la pokedex \n";
+        cin  >> opcionPokedex;
+
+        switch (opcionPokedex)
+        {
+        case 1:
+            cout << "Tipo: " << tipoToString(charmander.tipo1) << "\n";
+            cout << "Habilidad especial (ataque 1): Llamarada \n";
+            cout << "Descripcion: Charmander es un Pokémon de tipo fuego, conocido por su llamita en la punta de su cola. \n";
+            cout << "Vida: " << charmander.hp << "\nAtaque especial (Llamarada) danio: "  << charmander.ataques[0] << "\nAtaque normal (Araniaso) danio: " << charmander.ataques[1] << "\nCuracion: " << charmander.curacion << endl;
+            break;
+        case 2:
+            cout << "Tipo: " << tipoToString(bulbasaur.tipo1) << "\n";
+            cout << "Habilidad especial (ataque 1): Chlorophyll \n";
+            cout << "Descripcion: Bulbasaur es un Pokémon de tipo planta/veneno que tiene una planta en su espalda que crece con el tiempo. \n";
+            cout << "Vida: " << bulbasaur.hp << "\nAtaque especial (Llamarada) danio: "  << bulbasaur.ataques[0] << "\nAtaque normal (Araniaso) danio: " << bulbasaur.ataques[1] << "\nCuracion: " << bulbasaur.curacion << endl;
+            break;
+        case 3:
+            cout << "Tipo: " << tipoToString(squirtle.tipo1) << "\n";
+            cout << "Habilidad especial (ataque 1): Torrente \n";
+            cout << "Descripcion: Squirtle es un Pokémon de tipo agua, conocido por su caparazón resistente y su habilidad para disparar agua. \n";
+            cout << "Vida: " << squirtle.hp << "\nAtaque especial (Llamarada) danio: "  << squirtle.ataques[0] << "\nAtaque normal (Araniaso) danio: " << squirtle.ataques[1] << "\nCuracion: " << squirtle.curacion << endl;
+            break;
+        case 4: 
+            cout << "Saliendo de la pokedex... \n";
+        default:
+            break;
+        }
+        if (opcionPokedex != 4)
+        {
+            cout << "Presiona 0 para regresar al menu: ";
+            cin >> salir;
+        }
+    }
+
 }
 
 void Menu(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenador2, PokemonData& pokemon1, PokemonData& pokemon2){
@@ -391,19 +505,7 @@ void Menu(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenador2, Pokemo
                 break;
 
             case 3:
-                cout << "------------ Pokédex ------------" << endl;
-                cout << "1. Charmander: " << endl;
-                cout << "   Tipo: " << tipoToString(charmander.tipo1) << endl;
-                cout << "   Habilidad: Llama" << endl;
-                cout << "   Descripcion: Charmander es un Pokémon de tipo fuego, conocido por su llamita en la punta de su cola." << endl;
-                cout << "2. Bulbasaur: " << endl;
-                cout << "   Tipo: " << tipoToString(bulbasaur.tipo1) << endl;
-                cout << "   Habilidad: Chlorophyll" << endl;
-                cout << "   Descripcion: Bulbasaur es un Pokémon de tipo planta/veneno que tiene una planta en su espalda que crece con el tiempo." << endl;
-                cout << "3. Squirtle: " << endl;
-                cout << "   Tipo: " << tipoToString(squirtle.tipo1) << endl;
-                cout << "   Habilidad: Torrente" << endl;
-                cout << "   Descripcion: Squirtle es un Pokémon de tipo agua, conocido por su caparazón resistente y su habilidad para disparar agua." << endl;
+                Pokedex();
                 break;
 
             case 4:
@@ -431,6 +533,8 @@ int main(){
     EntrenadorPokemon entrenador2;
     PokemonData pokemon1;
     PokemonData pokemon2;
+
+    logopokemon();
 
     IniciodeSesion(entrenador1, entrenador2, pokemon1, pokemon2); //Llamamos la funcion para iniciar sesion
 
