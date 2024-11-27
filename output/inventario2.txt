@@ -1,0 +1,4 @@
+Nombre del entrenador: Miguel
+Pokemon: Bulbasaur 100 25 15 12 Planta
+Cantidad de caramelos: 5
+-----------------------

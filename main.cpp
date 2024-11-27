@@ -322,7 +322,7 @@ void IniciodeSesion(EntrenadorPokemon& entrenador1, EntrenadorPokemon& entrenado
     char opcion_InicioSesion1;
     char opcion_InicioSesion2;
     cout << "BIENVENIDO A LA ARENA POKEMON! \n";
-    cout << "Eres nuevo o ya eres un entrenador pokemon? (s/n): ";
+    cout << "Eres nuevo o ya eres un entrenador pokemon? (Si soy entrenador pokemon (pon s)/(No, no soy entrenador pokemon(pon n): ";
     cin >> opcion_InicioSesion1;
 
     if (opcion_InicioSesion1 == 's' || opcion_InicioSesion1 == 'S')

@@ -1,0 +1,4 @@
+Nombre del entrenador: Juan
+Pokemon: Charmander 100 30 20 10 Fuego
+Cantidad de caramelos: 5
+-----------------------
